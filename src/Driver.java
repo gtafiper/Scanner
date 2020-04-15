@@ -1,14 +1,18 @@
-import lejos.hardware.BrickFinder;
+import lejos.hardware.Button;
 import lejos.hardware.Sound;
-import lejos.hardware.ev3.EV3;
-
 import lejos.robotics.navigation.MovePilot;
 import lejos.robotics.subsumption.Behavior;
 
 public class Driver implements Behavior{
 	
-	private boolean suppressed = false;
-	private static MovePilot pilot = null;
+	private boolean _suppressed;
+	private MovePilot _pilot;
+	
+	
+	public Driver(MovePilot pilot) {
+		_pilot = pilot;
+		_suppressed = false;
+	}
 
 	@Override
 	public boolean takeControl() {
@@ -18,21 +22,21 @@ public class Driver implements Behavior{
 	@Override
 	public void action() {
 		
-		 suppressed = false;
-		 EV3 brick = (EV3) BrickFinder.getDefault();
-		 PilotSetUp.setupPilot(brick, pilot);
+		_suppressed = false;
+		
 		 Sound.beep();
-		 pilot.forward();
-		 while( !suppressed )
+		 _pilot.forward();
+		 while( !_suppressed )
 		      Thread.yield();
 		 
-		 pilot.stop();
+		 _pilot.stop();
 	
 	}
+	
 
 	@Override
 	public void suppress() {
-		suppressed = true;
+		_suppressed = true;
 		
 	}
 	
